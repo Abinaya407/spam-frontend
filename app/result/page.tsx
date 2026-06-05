@@ -1,19 +1,17 @@
 "use client";
 
 import { Suspense } from "react";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 function ResultContent() {
-
   const searchParams = useSearchParams();
   const router = useRouter();
 
   const status = searchParams.get("status");
-const percentage = Number(searchParams.get("percentage") || 0); 
- console.log("STATUS:", status);
-console.log("PERCENTAGE:", percentage);
+  const percentage = Number(searchParams.get("percentage") || 0);
+
   const senderEmail = searchParams.get("senderEmail");
+
   const risksParam = searchParams.get("risks");
   const urlsParam = searchParams.get("urls");
 
@@ -47,12 +45,10 @@ console.log("PERCENTAGE:", percentage);
         backgroundColor: "#d1d5db",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
         alignItems: "center",
         padding: "30px",
       }}
     >
-
       <h1
         style={{
           fontSize: "48px",
@@ -88,10 +84,36 @@ console.log("PERCENTAGE:", percentage);
             height: "100%",
             backgroundColor: isSpam ? "red" : "green",
           }}
-        ></div>
+        />
       </div>
 
-      {/* Reasons Box */}
+      {/* Sender Analysis */}
+      {senderEmail && (
+        <div
+          style={{
+            backgroundColor: "white",
+            padding: "20px",
+            borderRadius: "12px",
+            width: "500px",
+            marginBottom: "20px",
+          }}
+        >
+          <h3
+            style={{
+              marginBottom: "15px",
+              fontSize: "22px",
+            }}
+          >
+            📧 Sender Analysis
+          </h3>
+
+          <p>
+            <strong>Sender:</strong> {senderEmail}
+          </p>
+        </div>
+      )}
+
+      {/* Reasons */}
       <div
         style={{
           backgroundColor: "white",
@@ -136,30 +158,6 @@ console.log("PERCENTAGE:", percentage);
             marginBottom: "20px",
           }}
         >
-          {senderEmail && (
-  <div
-    style={{
-      backgroundColor: "white",
-      padding: "20px",
-      borderRadius: "12px",
-      width: "500px",
-      marginBottom: "20px",
-    }}
-  >
-    <h3
-      style={{
-        marginBottom: "15px",
-        fontSize: "22px",
-      }}
-    >
-      📧 Sender Analysis
-    </h3>
-
-    <p>
-      <strong>Sender:</strong> {senderEmail}
-    </p>
-  </div>
-)}
           <h3
             style={{
               marginBottom: "15px",
@@ -238,10 +236,10 @@ console.log("PERCENTAGE:", percentage);
       >
         Analyze Another Email
       </button>
-
     </div>
   );
 }
+
 export default function ResultPage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>

@@ -41,7 +41,9 @@ export default function Home() {
     router.push(
       `/result?status=${data.status}` +
       `&percentage=${data.percentage}` +
-      `&senderEmail=${encodeURIComponent(senderEmail || "")}`
+      `&senderEmail=${encodeURIComponent(senderEmail || "")}`+
+  `&risks=${encodeURIComponent(JSON.stringify(data.risks || []))}` +
+  `&urls=${encodeURIComponent(JSON.stringify(data.urls || []))}`
     );
 
   } catch (error) {
