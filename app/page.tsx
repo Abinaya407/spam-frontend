@@ -11,42 +11,46 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   const detectSpam = async () => {
-    try {
-      setLoading(true);
-      console.log("Button clicked");
+  try {
+    setLoading(true);
 
-      const response = await fetch(
-        "https://spam-backend-xigh.onrender.com/predict",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            text: email, // IMPORTANT FIX (backend expects "text")
-          }),
-        }
-      );
+    console.log("Sending request...");
 
-      if (!response.ok) {
-        throw new Error("Server error");
+    const response = await fetch(
+      "https://spam-backend-xigh.onrender.com/predict",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: email,
+        }),
       }
+    );
 
-      const data = await response.json();
-      console.log("Response:", data);
+    console.log("Status:", response.status);
 
-      router.push(
-        `/result?status=${data.status}` +
-          `&percentage=${data.percentage}` +
-          `&senderEmail=${encodeURIComponent(senderEmail || "")}`
-      );
-    } catch (error) {
-      console.error("Fetch error:", error);
-      alert("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
     }
-  };
+
+    const data = await response.json();
+    console.log("API Response:", data);
+
+    router.push(
+      `/result?status=${data.status}` +
+      `&percentage=${data.percentage}` +
+      `&senderEmail=${encodeURIComponent(senderEmail || "")}`
+    );
+
+  } catch (error) {
+    console.error("Fetch error:", error);
+    alert("Backend connection failed.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div
