@@ -9,7 +9,12 @@ from sklearn.metrics import accuracy_score
 
 # Load dataset
 df = pd.read_csv("CEAS_08.csv")
+print(df[["label", "body"]].head(20))
+print("Unique labels:")
+print(df["label"].unique())
 
+print("\nLabel counts:")
+print(df["label"].value_counts())
 # Keep only needed columns
 df = df[["body", "label"]]
 
@@ -31,9 +36,13 @@ X_train, X_test, y_train, y_test = train_test_split(
 model = Pipeline([
     ("tfidf", TfidfVectorizer(
         stop_words="english",
-        max_features=10000
+        max_features=10000,
+        ngram_range=(1, 2)
     )),
-    ("classifier", LogisticRegression())
+    ("classifier", LogisticRegression(
+        class_weight="balanced",
+        max_iter=1000
+    ))
 ])
 
 # Train model
@@ -50,3 +59,9 @@ print(f"Accuracy: {accuracy * 100:.2f}%")
 joblib.dump(model, "spam_model.pkl")
 
 print("Model saved as spam_model.pkl")
+
+print(model.predict(["I am happy"]))
+print(model.predict_proba(["I am happy"]))
+
+print(model.predict(["URGENT! Claim your free prize now!"]))
+print(model.predict_proba(["URGENT! Claim your free prize now!"]))
